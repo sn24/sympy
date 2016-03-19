@@ -1148,7 +1148,7 @@ def classify_ode(eq, func=None, dict=False, ics=None, **kwargs):
 
     elif order == 2:
         # Bessel Equation 
-        s=a*f(x).diff(x,2)+a*df/x+a*y-y*c/(x**2)
+        s=a*f(x).diff(x,2)+a*df/x+a*f(x)-f(x)*c/(x**2)
         r = reduced_eq.match(s)
         if r and r[a] != 0:
             g = simplify(r[c]/r[e])
