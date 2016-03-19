@@ -286,6 +286,7 @@ allhints = (
     "separable",
     "1st_exact",
     "1st_linear",
+    "Bessel",
     "Bernoulli",
     "Riccati_special_minus2",
     "1st_homogeneous_coeff_best",
@@ -1146,6 +1147,17 @@ def classify_ode(eq, func=None, dict=False, ics=None, **kwargs):
 
 
     elif order == 2:
+        # Bessel Equation 
+        s=a*f(x).diff(x,2)+a*df/x+a*y-y*c/(x**2)
+        r = reduced_eq.match(s)
+        if r and r[a] != 0:
+            g = simplify(r[c]/r[e])
+            if g.has(x) or g<0:
+                pass
+            else:
+                r = {'g':g}
+                matching_hints["Bessel'] = r
+            
         # Liouville ODE in the form
         # f(x).diff(x, 2) + g(f(x))*(f(x).diff(x))**2 + h(x)*f(x).diff(x)
         # See Goldstein and Braun, "Advanced Methods for the Solution of
