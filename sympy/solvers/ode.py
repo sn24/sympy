@@ -248,7 +248,7 @@ from sympy.core.sympify import sympify
 
 from sympy.logic.boolalg import BooleanAtom
 from sympy.functions import cos, exp, im, log, re, sin, tan, sqrt, \
-    atan2, conjugate
+    atan2, conjugate,bessely,besselj
 from sympy.functions.combinatorial.factorials import factorial
 from sympy.integrals.integrals import Integral, integrate
 from sympy.matrices import wronskian, Matrix, eye, zeros
@@ -1156,7 +1156,7 @@ def classify_ode(eq, func=None, dict=False, ics=None, **kwargs):
                 pass
             else:
                 r = {'g':g}
-                matching_hints["Bessel'] = r
+                matching_hints["Bessel"] = r
             
         # Liouville ODE in the form
         # f(x).diff(x, 2) + g(f(x))*(f(x).diff(x))**2 + h(x)*f(x).diff(x)
@@ -3447,8 +3447,17 @@ def ode_Riccati_special_minus2(eq, func, order, match):
     C1 = get_numbered_constants(eq, num=1)
     mu = sqrt(4*d2*b2 - (a2 - c2)**2)
     return Eq(f(x), (a2 - c2 - mu*tan(mu/(2*a2)*log(x) + C1))/(2*b2*x))
-
-
+    
+def ode_Bessel(eq, func, order, match):
+    x = func.args[0]
+    f = func.func
+    r = match  # x**2*f(x).diff(x, 2) + f(x).diff(x)*x + f(x)*(x**2-c**2)
+    g = r['g']
+    t=sqrt(g)
+    C1, C2 = get_numbered_constants(eq, num=2)
+    sol = Eq(f(x), C1*besselj(t,x)+C2*bessely(t,x))
+    return sol
+    
 def ode_Liouville(eq, func, order, match):
     r"""
     Solves 2nd order Liouville differential equations.
